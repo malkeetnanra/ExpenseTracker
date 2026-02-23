@@ -239,15 +239,3 @@ Password:
 **Malkeet Singh Nanra**  
 Backend Developer (Java + Spring Boot)  
 Transitioning from Cloud Support → SDE1  
-
----
-
-If you’d like, next I can:
-
-- ✅ Generate a professional README.md ready to paste into GitHub  
-- ✅ Help you improve folder naming to match real production standards  
-- ✅ Add Docker + PostgreSQL setup  
-- ✅ Create JWT implementation template code  
-- ✅ Help you prepare how to explain this in interviews  
-
-What would you like to improve next?
