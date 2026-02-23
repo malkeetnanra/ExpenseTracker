@@ -1,5 +1,5 @@
 package com.malkeet.ExpenseTracker.repository;
 
-public class ExpenseRepository {
-
+public interface ExpenseRepository {
+    
 }
