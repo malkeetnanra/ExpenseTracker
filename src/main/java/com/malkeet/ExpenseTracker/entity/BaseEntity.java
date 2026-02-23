@@ -8,7 +8,7 @@ import jakarta.persistence.PreUpdate;
 
 @MappedSuperclass
 
-public class BaseEntity {
+public abstract class BaseEntity {
 
     Long id;
     LocalDateTime createdAt;
