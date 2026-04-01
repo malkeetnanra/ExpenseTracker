@@ -1,9 +1,9 @@
 package com.malkeet.ExpenseTracker.dto.request;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Getter
@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 public class LoginRequest {
 
     private String email;
-    private String name;
     private String password;
 
 }
