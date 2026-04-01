@@ -2,15 +2,12 @@ package com.malkeet.ExpenseTracker.entity;
 
 import java.time.LocalDateTime;
 
-import com.malkeet.ExpenseTracker.entity.enums.Category;
+import com.malkeet.ExpenseTracker.entity.enums.ExpenseCategory;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,21 +23,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Expense extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @NotBlank(message = "Title is required")
     private String title;
 
     private String description;
 
-    @NotBlank(message = "Amount is required")
+    @NotNull(message = "Amount is required")
     private Double amount;
 
     @NotNull(message = "Category is required")
     @Enumerated(EnumType.STRING)
-    private Category category;
+    private ExpenseCategory category;
 
     @NotNull(message = "Date is required")
     private LocalDateTime date;
