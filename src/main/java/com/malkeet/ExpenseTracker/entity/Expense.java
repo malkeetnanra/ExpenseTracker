@@ -40,4 +40,16 @@ public class Expense extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User user;
+
+    public void setDescription(String description) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setTitle(String title) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setTitle(String title) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
