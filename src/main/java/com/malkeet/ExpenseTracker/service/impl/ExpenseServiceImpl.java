@@ -43,9 +43,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public List<ExpenseResponse> getUserExpenses(Long userId) {
 
-        return expenseRepository.findAll()
-                .stream()
-                .filter(exp -> exp.getUser().getId().equals(userId))
+        return expenseRepository.findByUserId(userId).stream()
                 .map(this::mapToResponse)
                 .toList();
     }
