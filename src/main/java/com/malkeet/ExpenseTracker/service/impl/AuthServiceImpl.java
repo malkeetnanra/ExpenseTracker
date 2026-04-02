@@ -1,5 +1,7 @@
 package com.malkeet.ExpenseTracker.service.impl;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +11,7 @@ import com.malkeet.ExpenseTracker.dto.request.RegisterRequest;
 import com.malkeet.ExpenseTracker.dto.response.AuthResponse;
 import com.malkeet.ExpenseTracker.entity.User;
 import com.malkeet.ExpenseTracker.repository.UserRepository;
+import com.malkeet.ExpenseTracker.security.JwtService;
 import com.malkeet.ExpenseTracker.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Override
     @Transactional
@@ -44,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
         User savedUser = userRepository.save(user);
 
         return AuthResponse.builder()
-                .token(null) // JWT later
+                .token(jwtService.generateToken(savedUser.getEmail()))
                 .name(savedUser.getName())
                 .email(savedUser.getEmail())
                 .build();
@@ -52,18 +57,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
 
-        // Fetch user by email
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
-
-        // Validate password
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid email or password");
-        }
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         return AuthResponse.builder()
-                .token(null) // JWT later
+                .token(jwtService.generateToken(user.getEmail()))
                 .name(user.getName())
                 .email(user.getEmail())
                 .build();

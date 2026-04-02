@@ -14,9 +14,11 @@ C:\Users\Malke\OneDrive\Desktop\PJs\ExpenseTracker\src\main\java\com\malkeet\Exp
 C:\Users\Malke\OneDrive\Desktop\PJs\ExpenseTracker\src\main\java\com\malkeet\ExpenseTracker\entity\enums\ExpenseCategory.java
 C:\Users\Malke\OneDrive\Desktop\PJs\ExpenseTracker\src\main\java\com\malkeet\ExpenseTracker\entity\Expense.java
 C:\Users\Malke\OneDrive\Desktop\PJs\ExpenseTracker\src\main\java\com\malkeet\ExpenseTracker\entity\User.java
+C:\Users\Malke\OneDrive\Desktop\PJs\ExpenseTracker\src\main\java\com\malkeet\ExpenseTracker\exception\GlobalExceptionHandler.java
 C:\Users\Malke\OneDrive\Desktop\PJs\ExpenseTracker\src\main\java\com\malkeet\ExpenseTracker\ExpenseTrackerApplication.java
 C:\Users\Malke\OneDrive\Desktop\PJs\ExpenseTracker\src\main\java\com\malkeet\ExpenseTracker\repository\ExpenseRepository.java
 C:\Users\Malke\OneDrive\Desktop\PJs\ExpenseTracker\src\main\java\com\malkeet\ExpenseTracker\repository\UserRepository.java
+C:\Users\Malke\OneDrive\Desktop\PJs\ExpenseTracker\src\main\java\com\malkeet\ExpenseTracker\security\CustomUserDetailsService.java
 C:\Users\Malke\OneDrive\Desktop\PJs\ExpenseTracker\src\main\java\com\malkeet\ExpenseTracker\security\JwtAuthenticationFilter.java
 C:\Users\Malke\OneDrive\Desktop\PJs\ExpenseTracker\src\main\java\com\malkeet\ExpenseTracker\security\JwtService.java
 C:\Users\Malke\OneDrive\Desktop\PJs\ExpenseTracker\src\main\java\com\malkeet\ExpenseTracker\security\SecurityConfig.java

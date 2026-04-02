@@ -1,13 +1,30 @@
 package com.malkeet.ExpenseTracker.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.malkeet.ExpenseTracker.dto.request.ExpenseCreateRequest;
+import com.malkeet.ExpenseTracker.dto.request.ExpenseUpdateRequest;
 import com.malkeet.ExpenseTracker.dto.response.ExpenseResponse;
+import com.malkeet.ExpenseTracker.dto.response.MonthlySummaryResponse;
+import com.malkeet.ExpenseTracker.entity.enums.ExpenseCategory;
 
 public interface ExpenseService {
 
-    ExpenseResponse addExpense(Long userId, ExpenseCreateRequest request);
+    ExpenseResponse addExpense(String userEmail, ExpenseCreateRequest request);
 
-    List<ExpenseResponse> getUserExpenses(Long userId);
+    List<ExpenseResponse> getUserExpenses(
+            String userEmail,
+            ExpenseCategory category,
+            LocalDate startDate,
+            LocalDate endDate
+    );
+
+    ExpenseResponse getExpenseById(String userEmail, Long expenseId);
+
+    ExpenseResponse updateExpense(String userEmail, Long expenseId, ExpenseUpdateRequest request);
+
+    void deleteExpense(String userEmail, Long expenseId);
+
+    MonthlySummaryResponse getMonthlySummary(String userEmail, int year, int month);
 }
