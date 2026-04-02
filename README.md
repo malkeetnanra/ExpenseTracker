@@ -1,6 +1,6 @@
 # Expense Tracker Backend
 
-A secure Spring Boot REST API for tracking expenses with JWT authentication, refresh tokens, role-based access, filtering, pagination, Swagger docs, H2 for local development, and PostgreSQL-ready deployment support.
+A secure Spring Boot REST API for tracking expenses with JWT authentication, refresh tokens, role-based access, filtering, pagination, interactive API docs, H2 for local development, and PostgreSQL-ready deployment support.
 
 ## Features
 
@@ -13,7 +13,7 @@ A secure Spring Boot REST API for tracking expenses with JWT authentication, ref
 - Monthly summary with category breakdown
 - Role-based access with an admin-only users endpoint
 - Global exception handling and request validation
-- Swagger UI / OpenAPI docs
+- Interactive API docs
 - Docker and Docker Compose support
 - H2 development setup and PostgreSQL profile
 
@@ -28,7 +28,7 @@ A secure Spring Boot REST API for tracking expenses with JWT authentication, ref
 - Hibernate Validator
 - H2 Database
 - PostgreSQL
-- springdoc OpenAPI
+- springdoc API docs
 - Maven
 - JUnit 5 / MockMvc
 
