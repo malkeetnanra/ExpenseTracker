@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="hero">
+            <div class="hero__content">
+                <p class="eyebrow">Personal Finance Dashboard</p>
+                <h1>Track expenses with a clean workflow, fast filters, and instant monthly insight.</h1>
+                <p class="hero__copy">
+                    Register, manage expenses, review summaries, and keep everything organized in one place.
+                </p>
+            </div>
+            <div class="hero__panel glass">
+                <div class="hero__metric">
+                    <span>Secure Auth</span>
+                    <strong>JWT + Refresh</strong>
+                </div>
+                <div class="hero__metric">
+                    <span>Views</span>
+                    <strong>Expenses + Summary</strong>
+                </div>
+                <div class="hero__metric">
+                    <span>Mode</span>
+                    <strong>Student Friendly</strong>
+                </div>
+            </div>
+        </header>
+
+        <main class="layout">
+            <section id="auth-section" class="panel auth-panel">
+                <div class="tabs">
+                    <button id="login-tab" class="tab tab--active" type="button">Login</button>
+                    <button id="register-tab" class="tab" type="button">Register</button>
+                </div>
+
+                <form id="login-form" class="stack">
+                    <h2>Welcome Back</h2>
+                    <label class="field">
+                        <span>Email</span>
+                        <input type="email" id="login-email" placeholder="you@example.com" required>
+                    </label>
+                    <label class="field">
+                        <span>Password</span>
+                        <input type="password" id="login-password" placeholder="Enter password" required>
+                    </label>
+                    <button class="btn btn--primary" type="submit">Login</button>
+                </form>
+
+                <form id="register-form" class="stack hidden">
+                    <h2>Create Account</h2>
+                    <label class="field">
+                        <span>Name</span>
+                        <input type="text" id="register-name" placeholder="Your full name" required>
+                    </label>
+                    <label class="field">
+                        <span>Email</span>
+                        <input type="email" id="register-email" placeholder="you@example.com" required>
+                    </label>
+                    <label class="field">
+                        <span>Password</span>
+                        <input type="password" id="register-password" placeholder="Choose a password" required>
+                    </label>
+                    <label class="field">
+                        <span>Confirm Password</span>
+                        <input type="password" id="register-confirm-password" placeholder="Repeat password" required>
+                    </label>
+                    <button class="btn btn--primary" type="submit">Register</button>
+                </form>
+            </section>
+
+            <section id="app-section" class="stack hidden">
+                <div class="toolbar panel">
+                    <div>
+                        <p class="eyebrow">Signed In</p>
+                        <h2 id="welcome-title">Expense Tracker</h2>
+                        <p id="welcome-subtitle" class="muted">Manage your expenses and review your month.</p>
+                    </div>
+                    <div class="toolbar__actions">
+                        <button id="docs-btn" class="btn btn--secondary" type="button">API Docs</button>
+                        <button id="logout-btn" class="btn btn--ghost" type="button">Logout</button>
+                    </div>
+                </div>
+
+                <div class="metrics">
+                    <article class="metric-card panel">
+                        <span>Total This Month</span>
+                        <strong id="metric-total">INR 0</strong>
+                    </article>
+                    <article class="metric-card panel">
+                        <span>Expense Count</span>
+                        <strong id="metric-count">0</strong>
+                    </article>
+                    <article class="metric-card panel">
+                        <span>Current Role</span>
+                        <strong id="metric-role">USER</strong>
+                    </article>
+                </div>
+
+                <div class="grid">
+                    <section class="panel">
+                        <div class="section-head">
+                            <div>
+                                <p class="eyebrow">Expense Form</p>
+                                <h3 id="form-title">Add Expense</h3>
+                            </div>
+                            <button id="reset-expense-form" class="btn btn--ghost btn--small" type="button">Reset</button>
+                        </div>
+                        <form id="expense-form" class="stack">
+                            <input type="hidden" id="expense-id">
+                            <label class="field">
+                                <span>Title</span>
+                                <input type="text" id="expense-title" required>
+                            </label>
+                            <label class="field">
+                                <span>Description</span>
+                                <textarea id="expense-description" rows="3" placeholder="Optional"></textarea>
+                            </label>
+                            <div class="field-row">
+                                <label class="field">
+                                    <span>Amount</span>
+                                    <input type="number" id="expense-amount" min="0.01" step="0.01" required>
+                                </label>
+                                <label class="field">
+                                    <span>Date</span>
+                                    <input type="date" id="expense-date" required>
+                                </label>
+                            </div>
+                            <label class="field">
+                                <span>Category</span>
+                                <select id="expense-category" required>
+                                    <option value="FOOD">Food</option>
+                                    <option value="TRAVEL">Travel</option>
+                                    <option value="BILLS">Bills</option>
+                                    <option value="SHOPPING">Shopping</option>
+                                    <option value="OTHER">Other</option>
+                                </select>
+                            </label>
+                            <button class="btn btn--primary" type="submit">Save Expense</button>
+                        </form>
+                    </section>
+
+                    <section class="panel">
+                        <div class="section-head">
+                            <div>
+                                <p class="eyebrow">Monthly Summary</p>
+                                <h3>Quick Review</h3>
+                            </div>
+                        </div>
+                        <form id="summary-form" class="field-row">
+                            <label class="field">
+                                <span>Year</span>
+                                <input type="number" id="summary-year" min="2000" max="2100" required>
+                            </label>
+                            <label class="field">
+                                <span>Month</span>
+                                <input type="number" id="summary-month" min="1" max="12" required>
+                            </label>
+                            <button class="btn btn--secondary summary-btn" type="submit">Load</button>
+                        </form>
+                        <div class="summary-box">
+                            <h4 id="summary-month-label">No summary loaded</h4>
+                            <p id="summary-total" class="summary-total">INR 0</p>
+                            <ul id="summary-breakdown" class="summary-list"></ul>
+                        </div>
+                    </section>
+                </div>
+
+                <section class="panel">
+                    <div class="section-head">
+                        <div>
+                            <p class="eyebrow">Expense Explorer</p>
+                            <h3>Your Expenses</h3>
+                        </div>
+                        <div class="pager">
+                            <button id="prev-page" class="btn btn--ghost btn--small" type="button">Previous</button>
+                            <span id="page-indicator">Page 1</span>
+                            <button id="next-page" class="btn btn--ghost btn--small" type="button">Next</button>
+                        </div>
+                    </div>
+
+                    <form id="filters-form" class="filters">
+                        <label class="field">
+                            <span>Category</span>
+                            <select id="filter-category">
+                                <option value="">All</option>
+                                <option value="FOOD">Food</option>
+                                <option value="TRAVEL">Travel</option>
+                                <option value="BILLS">Bills</option>
+                                <option value="SHOPPING">Shopping</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Start Date</span>
+                            <input type="date" id="filter-start-date">
+                        </label>
+                        <label class="field">
+                            <span>End Date</span>
+                            <input type="date" id="filter-end-date">
+                        </label>
+                        <label class="field">
+                            <span>Sort By</span>
+                            <select id="filter-sort-by">
+                                <option value="date">Date</option>
+                                <option value="amount">Amount</option>
+                                <option value="title">Title</option>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Direction</span>
+                            <select id="filter-sort-dir">
+                                <option value="desc">Descending</option>
+                                <option value="asc">Ascending</option>
+                            </select>
+                        </label>
+                        <button class="btn btn--secondary" type="submit">Apply</button>
+                    </form>
+
+                    <div class="table-wrap">
+                        <table class="expense-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expense-table-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="admin-panel" class="panel hidden">
+                    <div class="section-head">
+                        <div>
+                            <p class="eyebrow">Admin Area</p>
+                            <h3>Registered Users</h3>
+                        </div>
+                        <button id="refresh-users-btn" class="btn btn--secondary btn--small" type="button">Refresh Users</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="expense-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <script src="/app.js"></script>
+</body>
+</html>
