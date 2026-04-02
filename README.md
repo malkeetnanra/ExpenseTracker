@@ -1,241 +1,190 @@
-💰 Expense Tracker Backend (Spring Boot)
+# Expense Tracker Backend
 
-A secure, production-ready REST API for managing user expenses.
+A secure Spring Boot REST API for tracking expenses with JWT authentication, refresh tokens, role-based access, filtering, pagination, Swagger docs, H2 for local development, and PostgreSQL-ready deployment support.
 
-Built using modern Spring Boot architecture with JWT authentication, clean layered design, validation, and global exception handling.
+## Features
 
-Designed as an SDE1-level backend portfolio project.
+- User registration and login with BCrypt password hashing
+- JWT access tokens plus refresh-token rotation
+- Logout by revoking refresh tokens
+- Expense CRUD with per-user ownership checks
+- Expense filtering by category and date range
+- Pagination and sorting for expense listing
+- Monthly summary with category breakdown
+- Role-based access with an admin-only users endpoint
+- Global exception handling and request validation
+- Swagger UI / OpenAPI docs
+- Docker and Docker Compose support
+- H2 development setup and PostgreSQL profile
 
-🚀 Tech Stack
-Backend
+## Tech Stack
 
 - Java 17
-- Spring Boot 3+
+- Spring Boot 3.5
 - Spring Web
-- Spring Data JPA (Hibernate)
-- Spring Security + JWT
-- Lombok
-- Hibernate Validator
-- ModelMapper (optional enhancement)
-- Database
-- H2 (Development)
-- Tools
-- Maven
-- GitHub Codespaces
-- Postman
-- Git
-- Bash / Terminal
-
-🏗 Architecture
-
-Follows Clean Layered Architecture
-
-Controller → Service → Repository → Database
-Key Principles
-
-- Separation of concerns
-- DTO-based communication
-- Global exception handling
-- JWT-based stateless authentication
-- Validation at request layer
-- Proper HTTP status codes
-
-📂 Project Structure
-src/main/java/com/expensetracker/
-
-  config/
-    AppConfig.java
-
-  controller/
-    AuthController.java
-    ExpenseController.java
-
-  service/
-    AuthService.java
-    ExpenseService.java
-
-  service/impl/
-    AuthServiceImpl.java
-    ExpenseServiceImpl.java
-
-  repository/
-    UserRepository.java
-    ExpenseRepository.java
-
-  entity/
-    User.java
-    Expense.java
-    BaseEntity.java   (NEW – common fields)
-
-  dto/
-    request/
-      RegisterRequest.java
-      LoginRequest.java
-      ExpenseCreateRequest.java
-      ExpenseUpdateRequest.java
-    response/
-      AuthResponse.java
-      ExpenseResponse.java
-      MonthlySummaryResponse.java
-
-  security/
-    SecurityConfig.java
-    JwtService.java
-    JwtAuthenticationFilter.java
-
-  exception/
-    GlobalExceptionHandler.java
-    CustomException.java
-
-  util/
-    MapperUtil.java
-🧱 Database Design
-User
-
-- id (Long)
-- name
-- email (unique)
-- password (BCrypt)
-- createdAt
-- updatedAt
-- Expense
-- id (Long)
-- title
-- description
-- amount
-- category (ENUM)
-- date
-- user (ManyToOne)
-- createdAt
-- updatedAt
-
-🔐 Authentication Flow (Improved)
-
-- User registers
-- Password stored using BCrypt
-- User logs in
-- JWT token generated
-- Token sent in:
-- Authorization: Bearer <token>
-- All expense endpoints secured
-
-📌 API Endpoints (Enhanced)
-🔐 Authentication
-Method	Endpoint	Description
-POST	/auth/register	Register new user
-POST	/auth/login	Login & receive JWT
-💵 Expense APIs (Protected)
-Method	Endpoint	Description
-POST	/expenses	Create expense
-GET	/expenses	Get all expenses (paginated)
-GET	/expenses/{id}	Get expense by ID
-PUT	/expenses/{id}	Update expense
-DELETE	/expenses/{id}	Delete expense
-GET	/expenses/summary/monthly	Monthly analytics
-🔍 Advanced Features Added
-
-✅ Pagination & Sorting
-GET /expenses?page=0&size=10&sort=date,desc
-
-✅ Filtering
-GET /expenses?category=FOOD
-
-GET /expenses?startDate=2025-01-01&endDate=2025-01-31
-✅ Monthly Summary Response Example
-{
-  "month": "January",
-  "totalAmount": 1200.50,
-  "totalExpenses": 18,
-  "categoryBreakdown": {
-    "FOOD": 400,
-    "TRAVEL": 300,
-    "BILLS": 500
-  }
-}
-
-⚙️ How to Run (GitHub Codespaces)
-Step 1
-chmod +x mvnw
-Step 2
-./mvnw clean install
-Step 3
-./mvnw spring-boot:run
-
-Open:
-
-http://localhost:8080
-🛢 H2 Console
-
-URL:
-/h2-console
-
-JDBC:
-jdbc:h2:mem:testdb
-
-Username:
-sa
-
-Password:
-(blank)
-
----
-
-# 🧪 Testing
-
-- Postman Collection included
-- Unit tests using JUnit + Mockito
-- Integration testing with @SpringBootTest
-
----
-
-# 📈 Project Roadmap (Improved)
-
-## Phase 1 – Core
-- Entities & Repositories
-- Basic CRUD
-- DTO mapping
-
-## Phase 2 – Security
+- Spring Data JPA
 - Spring Security
-- JWT
-- Password encryption
+- JWT (`jjwt`)
+- Hibernate Validator
+- H2 Database
+- PostgreSQL
+- springdoc OpenAPI
+- Maven
+- JUnit 5 / MockMvc
 
-## Phase 3 – Advanced Features
-- Pagination
-- Filtering
-- Analytics summary
-- Role-based access (ADMIN)
+## Project Structure
 
-## Phase 4 – Production Ready
-- PostgreSQL migration
-- Docker support
-- Swagger/OpenAPI docs
-- Deployment (Render / Railway / AWS)
+```text
+src/main/java/com/malkeet/ExpenseTracker
+├── config
+├── controller
+├── dto
+├── entity
+├── exception
+├── repository
+├── security
+└── service
+```
 
----
+## Authentication
 
-# 🐳 Optional Enhancements (Highly Recommended)
+The API uses:
 
-- Add Dockerfile
-- Add docker-compose.yml
-- Add OpenAPI (Swagger UI)
-- Add Refresh Token mechanism
-- Add Expense Export (CSV)
-- Add Rate limiting
-- Add Caching (Redis)
+- Short-lived access tokens for authenticated requests
+- Refresh tokens stored in the database
+- Token rotation on refresh
+- Refresh-token revocation on logout
 
----
+The first registered user becomes `ADMIN`. All later users are registered as `USER`.
 
-# 🎯 Resume Version (Short Description)
+## Main Endpoints
 
-> Built a secure Expense Tracker REST API using Spring Boot, JPA, and JWT authentication.  
-> Implemented layered architecture, DTO mapping, validation, pagination, filtering, and monthly analytics.  
-> Secured endpoints using Spring Security with stateless JWT authentication.
+### Auth
 
----
+- `POST /auth/register`
+- `POST /auth/login`
+- `POST /auth/refresh`
+- `POST /auth/logout`
 
-# 👨‍💻 Author
+### Expenses
 
-**Malkeet Singh Nanra**  
-Backend Developer (Java + Spring Boot)  
-Transitioning from Cloud Support → SDE1  
+- `POST /expenses`
+- `GET /expenses`
+- `GET /expenses/{id}`
+- `PUT /expenses/{id}`
+- `DELETE /expenses/{id}`
+- `GET /expenses/summary/monthly`
+
+### Admin
+
+- `GET /admin/users`
+
+## Example Expense Query
+
+```http
+GET /expenses?page=0&size=10&sortBy=date&sortDir=desc&category=FOOD&startDate=2026-04-01&endDate=2026-04-30
+Authorization: Bearer <access-token>
+```
+
+## Swagger
+
+After starting the app, open:
+
+- `http://localhost:8080/swagger-ui.html`
+
+## Local Run
+
+### Option 1: Maven Wrapper
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+### Option 2: Installed Maven
+
+```powershell
+mvn spring-boot:run
+```
+
+## H2 Console
+
+- URL: `http://localhost:8080/h2-console`
+- JDBC URL: `jdbc:h2:mem:expensetracker`
+- Username: `sa`
+- Password: blank
+
+## PostgreSQL Profile
+
+Run with the PostgreSQL profile:
+
+```powershell
+mvn spring-boot:run -Dspring-boot.run.profiles=postgres
+```
+
+Environment variables used by the PostgreSQL profile:
+
+- `SPRING_DATASOURCE_URL`
+- `SPRING_DATASOURCE_USERNAME`
+- `SPRING_DATASOURCE_PASSWORD`
+
+## Docker
+
+Build and run everything with PostgreSQL:
+
+```powershell
+docker-compose up --build
+```
+
+App URL:
+
+- `http://localhost:8080`
+
+Swagger URL:
+
+- `http://localhost:8080/swagger-ui.html`
+
+## Testing
+
+Run tests with:
+
+```powershell
+mvn test
+```
+
+Current automated coverage includes:
+
+- Spring context boot test
+- Register/login flow
+- Refresh/logout flow
+- Expense create/list/summary flow
+- Admin endpoint role protection
+- Unauthorized access checks
+
+## Sample Auth Response
+
+```json
+{
+  "token": "jwt-access-token",
+  "refreshToken": "refresh-token",
+  "tokenType": "Bearer",
+  "role": "USER",
+  "name": "Malkeet",
+  "email": "malkeet@example.com"
+}
+```
+
+## Notes
+
+- Access tokens are stateless JWTs.
+- Logout revokes the refresh token used for future renewals.
+- Expense data is always scoped to the authenticated user.
+- The admin endpoint is available only to users with the `ADMIN` role.
+
+## Next Possible Improvements
+
+- Redis-backed token/session management
+- Email verification / password reset
+- CSV export
+- Rate limiting
+- CI pipeline
+- Deployment to Render, Railway, or AWS

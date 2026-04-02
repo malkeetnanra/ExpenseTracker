@@ -2,7 +2,6 @@ package com.malkeet.ExpenseTracker.controller;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -21,6 +20,7 @@ import com.malkeet.ExpenseTracker.dto.request.ExpenseCreateRequest;
 import com.malkeet.ExpenseTracker.dto.request.ExpenseUpdateRequest;
 import com.malkeet.ExpenseTracker.dto.response.ExpenseResponse;
 import com.malkeet.ExpenseTracker.dto.response.MonthlySummaryResponse;
+import com.malkeet.ExpenseTracker.dto.response.PagedResponse;
 import com.malkeet.ExpenseTracker.entity.enums.ExpenseCategory;
 import com.malkeet.ExpenseTracker.service.ExpenseService;
 
@@ -41,13 +41,17 @@ public class ExpenseController {
     }
 
     @GetMapping
-    public List<ExpenseResponse> getExpenses(
+    public PagedResponse<ExpenseResponse> getExpenses(
             @RequestParam(required = false) ExpenseCategory category,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "date") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir,
             Principal principal
     ) {
-        return expenseService.getUserExpenses(principal.getName(), category, startDate, endDate);
+        return expenseService.getUserExpenses(principal.getName(), category, startDate, endDate, page, size, sortBy, sortDir);
     }
 
     @GetMapping("/{id}")

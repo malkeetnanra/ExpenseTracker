@@ -10,15 +10,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.malkeet.ExpenseTracker.dto.request.ExpenseCreateRequest;
 import com.malkeet.ExpenseTracker.dto.request.ExpenseUpdateRequest;
 import com.malkeet.ExpenseTracker.dto.response.ExpenseResponse;
 import com.malkeet.ExpenseTracker.dto.response.MonthlySummaryResponse;
+import com.malkeet.ExpenseTracker.dto.response.PagedResponse;
 import com.malkeet.ExpenseTracker.entity.Expense;
 import com.malkeet.ExpenseTracker.entity.User;
 import com.malkeet.ExpenseTracker.entity.enums.ExpenseCategory;
+import com.malkeet.ExpenseTracker.exception.BadRequestException;
+import com.malkeet.ExpenseTracker.exception.NotFoundException;
 import com.malkeet.ExpenseTracker.repository.ExpenseRepository;
 import com.malkeet.ExpenseTracker.repository.UserRepository;
 import com.malkeet.ExpenseTracker.service.ExpenseService;
@@ -45,11 +53,15 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<ExpenseResponse> getUserExpenses(
+    public PagedResponse<ExpenseResponse> getUserExpenses(
             String userEmail,
             ExpenseCategory category,
             LocalDate startDate,
-            LocalDate endDate
+            LocalDate endDate,
+            int page,
+            int size,
+            String sortBy,
+            String sortDir
     ) {
         User user = getUserByEmail(userEmail);
         LocalDate effectiveStartDate = startDate;
@@ -62,32 +74,31 @@ public class ExpenseServiceImpl implements ExpenseService {
             effectiveStartDate = effectiveEndDate;
         }
         if (effectiveStartDate != null && effectiveEndDate != null && effectiveEndDate.isBefore(effectiveStartDate)) {
-            throw new IllegalArgumentException("endDate must be on or after startDate");
+            throw new BadRequestException("endDate must be on or after startDate");
         }
 
-        List<Expense> expenses;
-        if (category != null && effectiveStartDate != null) {
-            expenses = expenseRepository.findByUserIdAndCategoryAndDateBetween(
-                    user.getId(),
-                    category,
-                    effectiveStartDate.atStartOfDay(),
-                    effectiveEndDate.plusDays(1).atStartOfDay().minusNanos(1)
-            );
-        } else if (category != null) {
-            expenses = expenseRepository.findByUserIdAndCategory(user.getId(), category);
-        } else if (effectiveStartDate != null) {
-            expenses = expenseRepository.findByUserIdAndDateBetween(
-                    user.getId(),
-                    effectiveStartDate.atStartOfDay(),
-                    effectiveEndDate.plusDays(1).atStartOfDay().minusNanos(1)
-            );
-        } else {
-            expenses = expenseRepository.findByUserId(user.getId());
+        Sort sort = Sort.by("asc".equalsIgnoreCase(sortDir) ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Specification<Expense> specification = Specification.where(hasUserId(user.getId()));
+        if (category != null) {
+            specification = specification.and(hasCategory(category));
+        }
+        if (effectiveStartDate != null) {
+            specification = specification.and(isWithinDateRange(effectiveStartDate, effectiveEndDate));
         }
 
-        return expenses.stream()
-                .map(this::mapToResponse)
-                .toList();
+        Page<Expense> expenses = expenseRepository.findAll(specification, pageable);
+
+        return PagedResponse.<ExpenseResponse>builder()
+                .content(expenses.getContent().stream().map(this::mapToResponse).toList())
+                .page(expenses.getNumber())
+                .size(expenses.getSize())
+                .totalElements(expenses.getTotalElements())
+                .totalPages(expenses.getTotalPages())
+                .first(expenses.isFirst())
+                .last(expenses.isLast())
+                .build();
     }
 
     @Override
@@ -141,12 +152,12 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     private User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     private Expense getExpenseForUser(Long userId, Long expenseId) {
         return expenseRepository.findByIdAndUserId(expenseId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("Expense not found"));
+                .orElseThrow(() -> new NotFoundException("Expense not found"));
     }
 
     private void applyExpenseDetails(
@@ -173,5 +184,19 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .category(expense.getCategory())
                 .date(expense.getDate())
                 .build();
+    }
+
+    private Specification<Expense> hasUserId(Long userId) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("user").get("id"), userId);
+    }
+
+    private Specification<Expense> hasCategory(ExpenseCategory category) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("category"), category);
+    }
+
+    private Specification<Expense> isWithinDateRange(LocalDate startDate, LocalDate endDate) {
+        LocalDateTime start = startDate.atStartOfDay();
+        LocalDateTime end = endDate.plusDays(1).atStartOfDay().minusNanos(1);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.between(root.get("date"), start, end);
     }
 }
